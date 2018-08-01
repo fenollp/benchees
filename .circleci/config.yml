@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  build:
+    docker: [image: 'elixir:alpine']
+    steps:
+    - run: |
+        apk update && apk upgrade
+        apk add curl ca-certificates git make
+    - checkout
+    - run: |
+        mix do local.hex --force, local.rebar --force, deps.get
+        mix format --check-formatted
+        mix run lib/insert_tail.exs
